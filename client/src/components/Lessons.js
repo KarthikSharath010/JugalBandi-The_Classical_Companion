@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import PracticeTracker from './PracticeTracker';
 import Reminders from './Reminders';
+import './Lessons.css';
 
 const Lessons = () => {
   const { user } = useContext(AuthContext);
@@ -39,28 +40,20 @@ const Lessons = () => {
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '20px auto', display: 'flex', gap: '20px' }}>
-      <div style={{ flex: '1' }}>
+    <div className="lessons-container">
+      <div className="lessons-left">
         <h2>Lessons</h2>
         {loading && <p>Loading lessons...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="error">{error}</p>}
         {!loading && lessons.length === 0 ? (
           <p>No lessons available for your role and level.</p>
         ) : (
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <ul className="lessons-list">
             {lessons.map((lesson) => (
-              <li
-                key={lesson._id}
-                style={{
-                  border: '1px solid #ddd',
-                  padding: '10px',
-                  marginBottom: '10px',
-                  borderRadius: '5px',
-                }}
-              >
+              <li key={lesson._id} className="lesson-item">
                 <h3>{lesson.title}</h3>
                 <p>{lesson.content}</p>
-                <p>
+                <p className="lesson-details">
                   <strong>Role:</strong> {lesson.role} | <strong>Level:</strong> {lesson.level}
                 </p>
               </li>
@@ -68,7 +61,7 @@ const Lessons = () => {
           </ul>
         )}
       </div>
-      <div style={{ flex: '1' }}>
+      <div className="lessons-right">
         <h2>Practice Tracker</h2>
         <PracticeTracker />
         <h2>Reminders</h2>

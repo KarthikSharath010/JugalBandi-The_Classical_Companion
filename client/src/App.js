@@ -1,50 +1,29 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, AuthContext } from './context/AuthContext';
+import { Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
-import LoginForm from './components/LoginForm';
-import ProfilePage from './components/ProfilePage';
 import RegisterForm from './components/RegisterForm';
+import LoginForm from './components/LoginForm';
 import Lessons from './components/Lessons';
+import ProfilePage from './components/ProfilePage';
 import Header from './components/Header';
+import { AuthContext } from './context/AuthContext';
+import './App.css';
 
-const ProtectedRoute = ({ children }) => {
-  const { user, loading } = React.useContext(AuthContext);
-  if (loading) return <p>Loading...</p>;
-  return user ? children : <Navigate to="/" />;
-};
+const App = () => {
+  const { user } = React.useContext(AuthContext);
 
-function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <div>
-          <Header />
-          <AuthContext.Consumer>
-            {({ loading }) => (
-              loading ? (
-                <p>Loading...</p>
-              ) : (
-                <Routes>
-                  <Route path="/" element={<LandingPage />} />
-                  <Route path="/login" element={<LoginForm />} />
-                  <Route path="/register" element={<RegisterForm />} />
-                  <Route
-                    path="/profile"
-                    element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}
-                  />
-                  <Route
-                    path="/lessons"
-                    element={<ProtectedRoute><Lessons /></ProtectedRoute>}
-                  />
-                </Routes>
-              )
-            )}
-          </AuthContext.Consumer>
-        </div>
-      </BrowserRouter>
-    </AuthProvider>
+    <div className="app-container">
+      {user && <Header />}
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/lessons" element={user ? <Lessons /> : <LoginForm />} />
+        <Route path="/profile" element={user ? <ProfilePage /> : <LoginForm />} />
+      </Routes>
+    </div>
   );
-}
+};
 
 export default App;

@@ -9,6 +9,7 @@ const RegisterForm = () => {
     role: '',
     level: '',
     email: '',
+    password: ''
   });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -36,7 +37,6 @@ const RegisterForm = () => {
         body: JSON.stringify(formData),
       });
 
-      // Check if response is JSON
       const contentType = res.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         const text = await res.text();
@@ -50,10 +50,9 @@ const RegisterForm = () => {
         throw new Error(data.message || 'Registration failed');
       }
 
-      // Auto-login after successful registration
-      await login(formData.email);
+      await login(formData.email, formData.password);
       setMessage('Registration successful! Redirecting to lessons...');
-      setFormData({ name: '', role: '', level: '', email: '' });
+      setFormData({ name: '', role: '', level: '', email: '', password: '' });
       setTimeout(() => navigate('/lessons', { replace: true }), 1000);
     } catch (err) {
       console.error('Registration error:', err);
@@ -78,6 +77,14 @@ const RegisterForm = () => {
           name="email"
           placeholder="Email"
           value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
           onChange={handleChange}
           required
         />

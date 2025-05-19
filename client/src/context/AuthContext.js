@@ -1,88 +1,54 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Checking token...');
     const token = localStorage.getItem('token');
-    console.log('Token:', token);
     if (token) {
       fetch('/api/users/me', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` }
       })
-        .then((res) => {
-          console.log('Fetch response for /me:', res.status, res.statusText);
-          if (!res.ok) {
-            throw new Error(`HTTP error: ${res.status} ${res.statusText}`);
-          }
+        .then(res => {
+          if (!res.ok) throw new Error('Invalid token');
           return res.json();
         })
-        .then((data) => {
-          console.log('Fetch data for /me:', data);
-          if (data.user) {
-            setUser(data.user);
-          } else {
-            console.warn('No user data found, removing token');
-            localStorage.removeItem('token');
-          }
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.error('Fetch error for /me:', err.message);
-          localStorage.removeItem('token');
-          setLoading(false);
-        });
-    } else {
-      console.log('No token found');
-      setLoading(false);
+        .then(data => setUser(data.user))
+        .catch(() => localStorage.removeItem('token'));
     }
   }, []);
 
-  const login = async (email) => {
-    try {
-      console.log('Attempting login with email:', email);
-      const res = await fetch('/api/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-      console.log('Login response:', res.status, res.statusText);
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || `HTTP error: ${res.status}`);
-      }
-      const data = await res.json();
-      console.log('Login data:', data);
-      if (data.token && data.user) {
-        localStorage.setItem('token', data.token);
-        setUser(data.user);
-      } else {
-        throw new Error('Invalid login response: missing token or user');
-      }
-      return data;
-    } catch (err) {
-      console.error('Login error:', err.message);
-      throw err;
+  const login = async (email, password) => {
+    const res = await fetch('/api/users/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await res.text();
+      throw new Error(`Non-JSON response: ${text.slice(0, 100)}...`);
     }
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || 'Login failed');
+    }
+    localStorage.setItem('token', data.token);
+    setUser(data.user);
   };
 
-  const logout = () => {
-    console.log('Logging out');
+  const logout = async () => {
     localStorage.removeItem('token');
     setUser(null);
+    navigate('/', { replace: true });
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

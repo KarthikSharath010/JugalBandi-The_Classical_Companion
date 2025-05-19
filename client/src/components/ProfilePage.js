@@ -1,78 +1,47 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
 import ProfileForm from './ProfileForm';
+import './ProfilePage.css';
 
 const ProfilePage = () => {
-  const { user, logout } = useContext(AuthContext);
-  const [profile, setProfile] = useState(null);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      setProfile(user);
-    }
-  }, [user]);
-
-  const handleUpdate = async (updatedUser) => {
-    const token = localStorage.getItem('token');
+  const handleUpdate = async (formData) => {
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch('/api/users/update', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updatedUser),
+        body: JSON.stringify(formData),
       });
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await res.text();
+        console.error('Non-JSON response:', text);
+        throw new Error(`Server returned non-JSON response: ${text.slice(0, 100)}...`);
+      }
       const data = await res.json();
-      if (res.ok) {
-        setProfile(data.user);
-      } else {
-        console.log(data.message);
+      if (!res.ok) {
+        throw new Error(data.message || 'Update failed');
       }
     } catch (err) {
-      console.log('Error updating profile:', err);
+      console.error('Update error:', err);
+      throw err;
     }
   };
 
   return (
-    <div>
+    <div className="profile-page-container">
+      <button className="back-button" onClick={() => navigate(-1)}>
+        Back
+      </button>
       <h2>Profile Page</h2>
-      {profile ? (
-        <>
-          <ProfileForm user={profile} onUpdate={handleUpdate} />
-          <Link
-            to="/lessons"
-            style={{
-              display: 'inline-block',
-              margin: '10px 0',
-              padding: '8px 16px',
-              background: '#1890ff',
-              color: 'white',
-              textDecoration: 'none',
-              borderRadius: '4px',
-            }}
-          >
-            View Lessons
-          </Link>
-          <br />
-          <button
-            onClick={logout}
-            style={{
-              marginTop: '10px',
-              padding: '8px 16px',
-              background: '#ff4d4f',
-              color: 'white',
-              border: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            Logout
-          </button>
-        </>
-      ) : (
-        <p>Loading profile...</p>
-      )}
+      {user && <ProfileForm user={user} onUpdate={handleUpdate} />}
     </div>
   );
 };

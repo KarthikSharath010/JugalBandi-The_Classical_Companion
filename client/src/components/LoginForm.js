@@ -4,42 +4,61 @@ import { AuthContext } from '../context/AuthContext';
 import './LoginForm.css';
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
+    setError('');
+
     try {
-      const data = await login(email);
-      console.log('Login response data:', data);
-      if (data.token && data.user) {
-        setMessage('Login successful');
-        setEmail('');
-        setTimeout(() => navigate('/lessons', { replace: true }), 1000);
-      } else {
-        setMessage(data.message || 'Login failed: No token or user data');
-      }
+      await login(formData.email, formData.password);
+      setMessage('Login successful! Redirecting to lessons...');
+      setTimeout(() => navigate('/lessons', { replace: true }), 1000);
     } catch (err) {
       console.error('Login error:', err);
-      setMessage(`Login failed: ${err.message}`);
+      setError(err.message || 'Login failed');
     }
   };
 
   return (
     <div className="login-container">
-      <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit} className="login-form">
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
           required
         />
         <button type="submit">Login</button>
       </form>
-      {message && <p className={message.includes('success') ? 'success' : 'error'}>{message}</p>}
+      {message && <p className="success">{message}</p>}
+      {error && <p className="error">{error}</p>}
     </div>
   );
 };
