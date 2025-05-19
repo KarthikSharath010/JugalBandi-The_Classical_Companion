@@ -1,0 +1,51 @@
+.landing-container {
+  max-width: 600px;
+  margin: 50px auto;
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.landing-container h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.landing-container p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.landing-button {
+  padding: 12px 24px;
+  text-decoration: none;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.login-button {
+  background-color: #1890ff;
+  color: white;
+}
+
+.login-button:hover {
+  background-color: #40a9ff;
+}
+
+.register-button {
+  background-color: #52c41a;
+  color: white;
+}
+
+.register-button:hover {
+  background-color: #73d13d;
+}

@@ -1,91 +1,76 @@
-// server/routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const authMiddleware = require('../middleware/authMiddleware');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-// POST: Register new user
+// Handle OPTIONS preflight for all routes
+router.options('*', (req, res) => {
+  res.status(200).send();
+});
+
+// Register a new user
 router.post('/register', async (req, res) => {
   try {
-    const { name, role, level, email } = req.body;
-
+    const { email, name, role, level } = req.body;
+    if (!email || !name || !role || !level) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
     const existingUser = await User.findOne({ email });
-
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'Email already exists' });
     }
-
-    const newUser = new User({ name, role, level, email });
-    await newUser.save();
-
-    res.status(201).json({ message: 'User registered successfully', user: newUser });
-  } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
-  }
-});
-
-// POST: Login user
-router.post('/login', async (req, res) => {
-  const { email } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Generate a JWT token
+    const user = new User({ email, name, role, level });
+    await user.save();
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-    res.json({
-      message: 'Login successful',
-      user,
-      token,
-    });
+    res.status(201).json({ token, user: { id: user._id, email, name, role, level } });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error('Error in /register:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// GET: Fetch user data (protected)
-router.get('/me', authMiddleware, async (req, res) => {
+// Get current user
+router.get('/me', async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
     res.json({ user });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error('Error in /me:', err);
+    res.status(401).json({ message: 'Invalid token' });
   }
 });
 
-// PUT: Update user profile (protected)
-router.put('/update', authMiddleware, async (req, res) => {
+// Login
+router.post('/login', async (req, res) => {
   try {
-    const { name, email, role, level } = req.body;
-    const user = await User.findByIdAndUpdate(
-      req.user.id,
-      { name, email, role, level },
-      { new: true }
-    );
-    res.json({ message: 'Profile updated', user });
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: 'User not found' });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token, user: { id: user._id, email: user.email, name: user.name, role: user.role, level: user.level } });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error('Error in /login:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// DELETE: Delete user (optional, not used in client)
-router.delete('/delete/:id', async (req, res) => {
+// Update user profile
+router.put('/update', async (req, res) => {
   try {
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
-
-    if (!deletedUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.status(200).json({ message: 'User deleted successfully' });
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByIdAndUpdate(decoded.id, req.body, { new: true }).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json({ user });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error('Error in /update:', err);
+    res.status(400).json({ message: 'Update failed' });
   }
 });
 

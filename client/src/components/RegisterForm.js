@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import './RegisterForm.css';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -7,14 +10,15 @@ const RegisterForm = () => {
     level: '',
     email: '',
   });
-
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -29,46 +33,70 @@ const RegisterForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
+
+      // Check if response is JSON
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await res.text();
+        console.error('Non-JSON response:', text);
+        throw new Error(`Server returned non-JSON response: ${text.slice(0, 100)}...`);
+      }
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.message || 'Something went wrong');
+      if (!res.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
 
-      setMessage(data.message);
+      // Auto-login after successful registration
+      await login(formData.email);
+      setMessage('Registration successful! Redirecting to lessons...');
       setFormData({ name: '', role: '', level: '', email: '' });
+      setTimeout(() => navigate('/lessons', { replace: true }), 1000);
     } catch (err) {
+      console.error('Registration error:', err);
       setError(err.message);
     }
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto' }}>
+    <div className="register-container">
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
-        <br />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-        <br />
+      <form onSubmit={handleSubmit} className="register-form">
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
         <select name="role" value={formData.role} onChange={handleChange} required>
           <option value="">Select Role</option>
           <option value="Dancer">Dancer</option>
           <option value="Instrumentalist">Instrumentalist</option>
           <option value="Both">Both</option>
         </select>
-        <br />
         <select name="level" value={formData.level} onChange={handleChange} required>
           <option value="">Select Level</option>
           <option value="Beginner">Beginner</option>
           <option value="Junior">Junior</option>
           <option value="Senior">Senior</option>
         </select>
-        <br />
         <button type="submit">Register</button>
       </form>
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {message && <p className="success">{message}</p>}
+      {error && <p className="error">{error}</p>}
     </div>
   );
 };

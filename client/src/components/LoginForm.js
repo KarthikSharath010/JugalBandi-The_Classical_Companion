@@ -1,60 +1,45 @@
-// src/components/LoginForm.js
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import './LoginForm.css';
 
 const LoginForm = () => {
-  const [formData, setFormData] = useState({ email: '' });
+  const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-
-  const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
-
     try {
-      const res = await fetch('/api/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || 'Something went wrong');
-
-      setMessage(data.message);
-      // Store the token in localStorage or state management
-      localStorage.setItem('token', data.token);
-      // Redirect to profile page after successful login
-      window.location.href = '/profile';
+      const data = await login(email);
+      console.log('Login response data:', data);
+      if (data.token && data.user) {
+        setMessage('Login successful');
+        setEmail('');
+        setTimeout(() => navigate('/lessons', { replace: true }), 1000);
+      } else {
+        setMessage(data.message || 'Login failed: No token or user data');
+      }
     } catch (err) {
-      setError(err.message);
+      console.error('Login error:', err);
+      setMessage(`Login failed: ${err.message}`);
     }
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto' }}>
-      <h2>Login</h2>
+    <div className="login-container">
       <form onSubmit={handleSubmit}>
         <input
           type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
           required
         />
-        <br />
         <button type="submit">Login</button>
       </form>
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {message && <p className={message.includes('success') ? 'success' : 'error'}>{message}</p>}
     </div>
   );
 };
