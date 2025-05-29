@@ -1,14 +1,43 @@
 .practice-tracker-container {
   padding: 20px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fffaf0, #fffaf0);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Merriweather', serif;
 }
 
 .practice-tracker-container h3,
 .practice-tracker-container h4 {
-  margin-bottom: 15px;
-  color: #333;
+  color: #7a2e2e;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.practice-tracker-container h3 {
+  font-size: 1.8rem;
+}
+
+.practice-tracker-container h4 {
+  font-size: 1.4rem;
+}
+
+.practice-tracker-container h3::after,
+.practice-tracker-container h4::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 2px;
+  background: #7a2e2e;
+  margin: 8px 0 0;
+  opacity: 0.5;
+}
+
+.practice-tracker-container h3::after {
+  margin-left: 0;
+}
+
+.practice-tracker-container h4::after {
+  margin-left: 0;
 }
 
 .practice-form,
@@ -16,39 +45,46 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .practice-form input,
 .reminder-form input {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
+  padding: 12px;
+  border: 1px solid rgba(122, 46, 46, 0.3);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: 'Merriweather', serif;
+  background-color: #fffcf5;
+  color: #7a2e2e;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .practice-form input:focus,
 .reminder-form input:focus {
   outline: none;
-  border-color: #1890ff;
-  box-shadow: 0 0 5px rgba(24, 144, 255, 0.3);
+  border-color: #7a2e2e;
+  box-shadow: 0 0 8px rgba(122, 46, 46, 0.4);
 }
 
 .practice-form button,
 .reminder-form button {
-  padding: 10px;
-  background-color: #1890ff;
-  color: white;
+  padding: 12px 24px;
+  background-color: #7a2e2e;
+  color: #fff;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Merriweather', serif;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .practice-form button:hover,
 .reminder-form button:hover {
-  background-color: #40a9ff;
+  transform: scale(1.05);
+  background-color: #8b3a3a;
 }
 
 .practice-list {
@@ -57,11 +93,13 @@
 }
 
 .practice-item {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
+  padding: 15px;
+  border-bottom: 1px solid rgba(122, 46, 46, 0.2);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #7a2e2e;
+  font-size: 1rem;
 }
 
 .practice-item:last-child {
@@ -74,39 +112,53 @@
 }
 
 .practice-actions button {
-  padding: 5px 10px;
-  font-size: 14px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-family: 'Merriweather', serif;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .practice-actions button:first-child {
-  background-color: #52c41a;
-  color: white;
+  background-color: #7a2e2e;
+  color: #fff;
 }
 
 .practice-actions button:first-child:hover {
-  background-color: #73d13d;
+  transform: scale(1.05);
+  background-color: #8b3a3a;
 }
 
 .practice-actions button:last-child {
-  background-color: #ff4d4f;
-  color: white;
+  background-color: #fff;
+  color: #7a2e2e;
+  border: 2px solid #7a2e2e;
 }
 
 .practice-actions button:last-child:hover {
-  background-color: #ff7875;
+  transform: scale(1.05);
+  background-color: #fff5f5;
 }
 
 .success {
-  color: #52c41a;
+  color: #4a8a2a;
   margin: 15px 0;
   font-size: 14px;
+  font-family: 'Merriweather', serif;
+  background: rgba(74, 138, 42, 0.1);
+  padding: 8px 12px;
+  border-radius: 4px;
 }
 
 .error {
-  color: #ff4d4f;
+  color: #7a2e2e;
   margin: 15px 0;
   font-size: 14px;
+  font-family: 'Merriweather', serif;
+  background: rgba(122, 46, 46, 0.1);
+  padding: 8px 12px;
+  border-radius: 4px;
 }

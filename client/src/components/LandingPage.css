@@ -1,51 +1,61 @@
 .landing-container {
-  max-width: 600px;
-  margin: 50px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #fffaf0, #fffaf0);
+  font-family: 'Merriweather', serif;
   text-align: center;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.landing-container h1 {
-  color: #333;
-  margin-bottom: 20px;
+.landing-logo {
+  width: 200px;
+  height: 190px;
+  margin-bottom: 10px;
+  /* object-fit: contain; */
+  border-radius: 50% ;
+  background-color: #fffaf0 ;
 }
 
-.landing-container p {
-  color: #666;
+h1 {
+  font-size: 3rem;
+  color: #7a2e2e;
+  margin: 0;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: #7a2e2e;
   margin-bottom: 30px;
+  font-style: italic;
 }
 
 .button-group {
   display: flex;
-  justify-content: center;
   gap: 20px;
 }
 
 .landing-button {
   padding: 12px 24px;
+  font-size: 1rem;
   text-decoration: none;
-  font-size: 16px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  border-radius: 8px;
+  transition: 0.3s;
+  border: none;
 }
 
 .login-button {
-  background-color: #1890ff;
-  color: white;
-}
-
-.login-button:hover {
-  background-color: #40a9ff;
+  background-color: #7a2e2e;
+  color: #fff;
 }
 
 .register-button {
-  background-color: #52c41a;
-  color: white;
+  background-color: #fff;
+  color: #7a2e2e;
+  border: 2px solid #7a2e2e;
 }
 
-.register-button:hover {
-  background-color: #73d13d;
+.landing-button:hover {
+  transform: scale(1.05);
 }

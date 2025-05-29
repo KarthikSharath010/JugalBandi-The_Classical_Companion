@@ -1,12 +1,11 @@
 import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import ProfileForm from './ProfileForm';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
+  
 
   const handleUpdate = async (formData) => {
     try {
@@ -37,9 +36,6 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-page-container">
-      <button className="back-button" onClick={() => navigate(-1)}>
-        Back
-      </button>
       <h2>Profile Page</h2>
       {user && <ProfileForm user={user} onUpdate={handleUpdate} />}
     </div>

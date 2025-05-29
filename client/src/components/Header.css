@@ -3,19 +3,20 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background: #f8f8f8;
+  background: linear-gradient(135deg, #fffaf0, #fffaf0);
   border-bottom: 1px solid #ddd;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  font-family: 'Merriweather', serif;
 }
 
 .header h1 {
   margin: 0;
-  font-size: 24px;
-  color: #333;
+  font-size: 2rem;
+  color: #7a2e2e;
 }
 
 .header-nav {
@@ -27,38 +28,38 @@
 .profile-link {
   display: flex;
   align-items: center;
-  padding: 8px 16px;
-  background: #1890ff;
-  color: white;
+  padding: 12px 24px;
+  background: #7a2e2e;
+  color: #fff;
   text-decoration: none;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  border-radius: 8px;
+  transition: 0.3s;
 }
 
 .profile-link:hover {
-  background: #40a9ff;
+  transform: scale(1.05);
 }
 
 .profile-link svg {
-  fill: white;
+  fill: #fff;
 }
 
 .logout-button {
   display: flex;
   align-items: center;
-  padding: 8px 16px;
-  background: rgba(200, 0, 0, 0.75);
-  color: white;
-  border: none;
-  border-radius: 4px;
+  padding: 12px 24px;
+  background: #fff;
+  color: #7a2e2e;
+  border: 2px solid #7a2e2e;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: 0.3s;
 }
 
 .logout-button:hover {
-  background: rgba(200, 0, 0, 0.9);
+  transform: scale(1.05);
 }
 
 .logout-button svg {
-  fill: white;
+  fill: #7a2e2e;
 }

@@ -1,33 +1,29 @@
 .profile-page-container {
   max-width: 600px;
   margin: 80px auto 20px;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border: 1px solid rgba(122, 46, 46, 0.2);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fffaf0, #fffaf0);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Merriweather', serif;
+  text-align: center;
   position: relative;
 }
 
 .profile-page-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  font-size: 2rem;
+  color: #7a2e2e;
+  margin-bottom: 25px;
+  position: relative;
 }
 
-.back-button {
-  position: absolute;
-  top: 70px;
-  left: 20px;
-  padding: 8px 16px;
-  background-color: #1890ff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.back-button:hover {
-  background-color: #40a9ff;
+.profile-page-container h2::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 2px;
+  background: #7a2e2e;
+  margin: 8px auto 0;
+  opacity: 0.5;
 }

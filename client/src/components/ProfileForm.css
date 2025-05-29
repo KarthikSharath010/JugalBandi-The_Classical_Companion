@@ -1,88 +1,119 @@
 .profile-form-container {
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 450px;
+  margin: 30px auto;
+  padding: 30px;
+  border: 1px solid rgba(122, 46, 46, 0.2);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fffaf0, #fffaf0);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Merriweather', serif;
   text-align: center;
 }
 
 .profile-form-container h3 {
-  margin-bottom: 20px;
-  color: #333;
+  font-size: 1.8rem;
+  color: #7a2e2e;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.profile-form-container h3::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 2px;
+  background: #7a2e2e;
+  margin: 8px auto 0;
+  opacity: 0.5;
 }
 
 .profile-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
 }
 
 .profile-form input,
 .profile-form select {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: #fff;
+  padding: 12px;
+  border: 1px solid rgba(122, 46, 46, 0.3);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: 'Merriweather', serif;
+  background-color: #fffcf5;
+  color: #7a2e2e;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .profile-form select {
   appearance: none;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path fill="%23333" d="M0 0h12L6 6z"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path fill="%237a2e2e" d="M0 0h12L6 6z"/></svg>');
   background-repeat: no-repeat;
-  background-position: right 10px center;
+  background-position: right 12px center;
   background-size: 12px;
-  padding-right: 30px;
+  padding-right: 35px;
 }
 
 .profile-form input:focus,
 .profile-form select:focus {
   outline: none;
-  border-color: #1890ff;
-  box-shadow: 0 0 5px rgba(24, 144, 255, 0.3);
+  border-color: #7a2e2e;
+  box-shadow: 0 0 8px rgba(122, 46, 46, 0.4);
 }
 
 .profile-form button {
-  padding: 10px;
-  background-color: #1890ff;
-  color: white;
+  padding: 12px 24px;
+  background-color: #7a2e2e;
+  color: #fff;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Merriweather', serif;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .profile-form button:hover {
-  background-color: #40a9ff;
+  transform: scale(1.05);
+  background-color: #8b3a3a;
 }
 
 .delete-button {
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #ff4d4f;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #fff;
+  color: #7a2e2e;
+  border: 2px solid #7a2e2e;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Merriweather', serif;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .delete-button:hover {
-  background-color: #ff7875;
+  transform: scale(1.05);
+  background-color: #fff5f5;
 }
 
 .success {
-  color: #52c41a;
-  margin-top: 15px;
+  color: #4a8a2a;
+  margin-top: 20px;
   font-size: 14px;
+  font-family: 'Merriweather', serif;
+  background: rgba(74, 138, 42, 0.1);
+  padding: 8px 12px;
+  border-radius: 4px;
 }
 
 .error {
-  color: #ff4d4f;
-  margin-top: 15px;
+  color: #7a2e2e;
+  margin-top: 20px;
   font-size: 14px;
+  font-family: 'Merriweather', serif;
+  background: rgba(122, 46, 46, 0.1);
+  padding: 8px 12px;
+  border-radius: 4px;
 }
